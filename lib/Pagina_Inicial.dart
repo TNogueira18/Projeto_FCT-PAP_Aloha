@@ -37,15 +37,18 @@ class _PaginaInicialState extends State<Pagina_Inicial> {
   }
 
   //Função que verifica se o token ainda está valido
-  Future<bool> verificarUtilizador() async{
-    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
+  Future<bool> verificarUtilizador() async {
+    SharedPreferences _sharedPreferences = await SharedPreferences
+        .getInstance();
     String? token = _sharedPreferences.getString('login_token');
     int? expirationTime = _sharedPreferences.getInt('login_token_expiration');
 
-    if (token != null && expirationTime != null && DateTime.now().millisecondsSinceEpoch < expirationTime) {
+    if (token != null && expirationTime != null && DateTime
+        .now()
+        .millisecondsSinceEpoch < expirationTime) {
       return true;
     } else {
       return false;
     }
-
+  }
 }

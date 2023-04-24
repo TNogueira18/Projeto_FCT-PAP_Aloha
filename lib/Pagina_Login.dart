@@ -123,10 +123,30 @@ class _PaginaLoginState extends State<Pagina_Login> {
        }),
      ); // Executar a pesquisa do login do utilizador na API
 
-    Map<String, dynamic> responseData = jsonDecode(response.body); //Retirar o texto da resposta da API para uma variavel
-    String? _token = responseData['token']; //Retirar o token para uma variavel para que possa ser utilizado no login
-    _sharedPreferences.setString('login_token', _token!); //Colocar o token para que o utilizador não tenha que estar sempre a efetuar o login na app
-    _sharedPreferences.setInt('login_token_expiration', DateTime.now().millisecondsSinceEpoch + (30 * 60 * 1000)); // Colocar o tempo que o token irá estar ativo por, o tempo pode ser alterado se modificar o primeiro valor pela quantidade de minutos desejado, de momento está preparado para durar 30 minutos
+    if(response.statusCode == 200){
+      Map<String, dynamic> responseData = jsonDecode(response.body); //Retirar o texto da resposta da API para uma variavel
+      String? _token = responseData['token']; //Retirar o token para uma variavel para que possa ser utilizado no login
+      _sharedPreferences.setString('login_token', _token!); //Colocar o token para que o utilizador não tenha que estar sempre a efetuar o login na app
+      _sharedPreferences.setInt('login_token_expiration', DateTime.now().millisecondsSinceEpoch + (30 * 60 * 1000)); // Colocar o tempo que o token irá estar ativo por, o tempo pode ser alterado se modificar o primeiro valor pela quantidade de minutos desejado, de momento está preparado para durar 30 minutos
+    }else{
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Erro'),
+            content: Text('Email ou palavra-passe incorreto'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
   }
 }
