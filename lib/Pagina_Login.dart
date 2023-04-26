@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:main/Pagina_Inicial.dart';
 
 
 // Declarar um album
@@ -37,6 +38,8 @@ class _PaginaLoginState extends State<Pagina_Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _verPassword = false;
+
+  //cores #1D3B8C, #000000)
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +131,7 @@ class _PaginaLoginState extends State<Pagina_Login> {
       String? _token = responseData['token']; //Retirar o token para uma variavel para que possa ser utilizado no login
       _sharedPreferences.setString('login_token', _token!); //Colocar o token para que o utilizador não tenha que estar sempre a efetuar o login na app
       _sharedPreferences.setInt('login_token_expiration', DateTime.now().millisecondsSinceEpoch + (30 * 60 * 1000)); // Colocar o tempo que o token irá estar ativo por, o tempo pode ser alterado se modificar o primeiro valor pela quantidade de minutos desejado, de momento está preparado para durar 30 minutos
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const Pagina_Inicial()));
     }else{
       showDialog(
         context: context,

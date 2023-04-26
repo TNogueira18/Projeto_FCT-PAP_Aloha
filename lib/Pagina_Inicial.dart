@@ -13,25 +13,22 @@ class Pagina_Inicial extends StatefulWidget {
 
 class _PaginaInicialState extends State<Pagina_Inicial> {
 
-  //Executar a verificação do token
-  @override
-  initState(){
-    super.initState();
-    verificarUtilizador().then((temUtilizador){
-      if(temUtilizador){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const Pagina_Inicial()));
-      }else{
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const Pagina_Login()));
-      }
-    });
-  }
-
   //Colocar os widgets
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-          child: Text('Bem Vindo')
+    return Scaffold(
+      body: Container(
+         decoration: BoxDecoration(
+           gradient: LinearGradient(
+               colors: [
+                 Color(0xFF1D3B8C),
+                 Color(0xFF000000),
+               ],
+             begin: Alignment.topLeft,
+             end: Alignment.bottomRight
+           )
+         ),
+        child: Text("Bem-Vindo")
       ),
     );
   }
