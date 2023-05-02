@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:main/Pagina_Login.dart';
-import 'package:main/Pagina_Inicial.dart';
+import 'package:main/Pages/Pagina_Login.dart';
+import 'package:main/Pages/Pagina_Inicial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //Declarar a Página

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'Pagina_Inicial.dart';
+import 'package:main/Pages/Login_Checker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: const Pagina_Inicial(),
+      home: const Login_Ckecker(),
     );
   }
 }
