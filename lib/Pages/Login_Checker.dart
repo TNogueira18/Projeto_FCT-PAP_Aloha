@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:main/Pages/Pagina_Login.dart';
-import 'package:main/Pages/Pagina_Inicial.dart';
+import 'package:main/Pages/Pagina_Dashboard_Tarefas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //Declarar a Página
@@ -17,9 +17,9 @@ class _Login_CkeckerState extends State<Login_Ckecker> {
   initState() {
     super.initState();
     verificarUtilizador().then((temUtilizador) {
-      if (temUtilizador) {
+      if (temUtilizador == true) {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const Pagina_Inicial()));
+            MaterialPageRoute(builder: (context) => const Pagina_Dashboard()));
       } else {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const Pagina_Login()));
@@ -48,14 +48,11 @@ class _Login_CkeckerState extends State<Login_Ckecker> {
 
   //Função que verifica se o token ainda está valido
   Future<bool> verificarUtilizador() async {
-    SharedPreferences _sharedPreferences = await SharedPreferences
-        .getInstance();
+    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     String? token = _sharedPreferences.getString('login_token');
     int? expirationTime = _sharedPreferences.getInt('login_token_expiration');
 
-    if (token != null && expirationTime != null && DateTime
-        .now()
-        .millisecondsSinceEpoch < expirationTime) {
+    if (token != null && expirationTime != null && DateTime.now().millisecondsSinceEpoch < expirationTime) {
       return true;
     } else {
       return false;

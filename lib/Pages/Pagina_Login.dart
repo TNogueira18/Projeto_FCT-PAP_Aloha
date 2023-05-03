@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:main/Pages/Pagina_Dashboard_Tarefas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:main/Pages/Pagina_Inicial.dart';
 
 
 // Declarar um album
@@ -41,10 +41,14 @@ class _PaginaLoginState extends State<Pagina_Login> {
 
   @override
   Widget build(BuildContext context) {
+
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+        height: _height,
+        width: _width,
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 colors: [
@@ -63,10 +67,9 @@ class _PaginaLoginState extends State<Pagina_Login> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image(
-                    image: AssetImage(
-                      'lib/Imagens/logoS4A.png'
-                    ),
+                  Image.asset(
+                      'lib/Imagens/logoS4A.png',
+                    width: (_width*3)/2,
                   ),
                   SizedBox(
                     height: 40,
@@ -163,19 +166,20 @@ class _PaginaLoginState extends State<Pagina_Login> {
        }),
      ); // Executar a pesquisa do login do utilizador na API
 
-    if(response.statusCode == 200){
-      Map<String, dynamic> responseData = jsonDecode(response.body); //Retirar o texto da resposta da API para uma variavel
+    Map<String, dynamic> responseData = jsonDecode(response.body); //Retirar o texto da resposta da API para uma variavel
+
+    if(responseData['token'] != null){
       String? _token = responseData['token']; //Retirar o token para uma variavel para que possa ser utilizado no login
       _sharedPreferences.setString('login_token', _token!); //Colocar o token para que o utilizador não tenha que estar sempre a efetuar o login na app
       _sharedPreferences.setInt('login_token_expiration', DateTime.now().millisecondsSinceEpoch + (5 * 60 * 1000)); // Colocar o tempo que o token irá estar ativo por, o tempo pode ser alterado se modificar o primeiro valor pela quantidade de minutos desejado, de momento está preparado para durar 5 minutos
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const Pagina_Inicial()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const Pagina_Dashboard()));
     }else{
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Erro'),
-            content: Text('Email ou palavra-passe incorreto'),
+            title: Text('Error'),
+            content: Text('Email ou Password incorreto!'),
             actions: <Widget>[
               ElevatedButton(
                 child: Text('OK'),
@@ -188,6 +192,5 @@ class _PaginaLoginState extends State<Pagina_Login> {
         },
       );
     }
-
   }
 }
