@@ -27,7 +27,12 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                   child: GestureDetector(
                     onTap: () {},
                     child: Text(
-                      'Atrasadas'
+                      'Atrasadas',
+                      style: TextStyle(
+                          backgroundColor: Color(
+                              0xFF2c55ca
+                          )
+                      ),
                     )
                   )
                 ),
@@ -36,7 +41,12 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                     child: GestureDetector(
                         onTap: () {},
                         child: Text(
-                            'Dia'
+                            'Dia',
+                          style: TextStyle(
+                            backgroundColor: Color(
+                                0xFF2c55ca
+                            )
+                          ),
                         )
                     )
                 ),
@@ -45,7 +55,12 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                     child: GestureDetector(
                         onTap: () {},
                         child: Text(
-                            'Futuras'
+                            'Futuras',
+                          style: TextStyle(
+                              backgroundColor: Color(
+                                  0xFF2c55ca
+                              )
+                          ),
                         )
                     )
                 ),
@@ -58,4 +73,7 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
       ),
     );
   }
+
+
+
 }
