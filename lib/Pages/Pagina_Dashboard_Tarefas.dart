@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Pagina_Dashboard extends StatefulWidget {
   const Pagina_Dashboard({super.key});
@@ -18,6 +19,9 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
               title: Text(
                 'Tarefas'
               ),
+              backgroundColor: Color(
+                0xFF2c55ca
+              ),
               leading: Icon(
                 Icons.menu,
               ),
@@ -29,9 +33,6 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                     child: Text(
                       'Atrasadas',
                       style: TextStyle(
-                          backgroundColor: Color(
-                              0xFF2c55ca
-                          )
                       ),
                     )
                   )
@@ -43,9 +44,7 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                         child: Text(
                             'Dia',
                           style: TextStyle(
-                            backgroundColor: Color(
-                                0xFF2c55ca
-                            )
+                            color: Colors.white
                           ),
                         )
                     )
@@ -57,9 +56,6 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                         child: Text(
                             'Futuras',
                           style: TextStyle(
-                              backgroundColor: Color(
-                                  0xFF2c55ca
-                              )
                           ),
                         )
                     )
@@ -68,12 +64,20 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
             ),
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
+
           )
         ],
       ),
     );
   }
+}
 
-
-
+EfetuarLogin() async {
+  var response = await http.get(
+    Uri.parse('https://demo.spot4all.com/'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      },
+    ),
+  ); // Executar a pesquisa do login do utilizador na API
 }
