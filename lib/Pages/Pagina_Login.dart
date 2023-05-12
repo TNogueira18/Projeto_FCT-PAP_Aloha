@@ -68,8 +68,7 @@ class _PaginaLoginState extends State<Pagina_Login> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Image.asset(
-                      'lib/Imagens/logoS4A.png',
-                    width: (_width*3)/2,
+                    'lib/Imagens/logoS4A.png',
                   ),
                   SizedBox(
                     height: 40,
@@ -131,9 +130,10 @@ class _PaginaLoginState extends State<Pagina_Login> {
                       ), // Background color
                     ),
                     onPressed: () {
+                      print(_width/10);
                       if (_formkey.currentState!.validate()) {
                         EfetuarLogin(); //Efetuar o login
-                      }
+                      };
                     },
                     child: Text(
                       'Aceder',
@@ -171,6 +171,10 @@ class _PaginaLoginState extends State<Pagina_Login> {
     if(responseData['token'] != null){
       String? _token = responseData['token']; //Retirar o token para uma variavel para que possa ser utilizado no login
       _sharedPreferences.setString('login_token', _token!); //Colocar o token para que o utilizador não tenha que estar sempre a efetuar o login na app
+
+      int? _user_ID = responseData['user']['user_id']; //Retirar o id do utilizador para uma variavel para que possa ser utilizado na dashboard
+      _sharedPreferences.setInt('ID_User', _user_ID!); //Colocar o Id do utilizador para que este possa ser utilizado para  a dasboard
+
       _sharedPreferences.setInt('login_token_expiration', DateTime.now().millisecondsSinceEpoch + (5 * 60 * 1000)); // Colocar o tempo que o token irá estar ativo por, o tempo pode ser alterado se modificar o primeiro valor pela quantidade de minutos desejado, de momento está preparado para durar 5 minutos
       Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const Pagina_Dashboard()));
     }else{
