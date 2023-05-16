@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -83,7 +84,7 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        GetTarefas();
+                        getTarefas();
                       },
                     child: Text(
                       'Teste'
@@ -98,30 +99,43 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
   }
 }
 
-
-ListTarefas() async{
-
-}
-
-
-GetTarefas() async {
+Future<Album> getTarefas() async {
 
   SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
-  int? _ID_User = _sharedPreferences.getInt('ID_User');
+  int? _ID_User = _sharedPreferences.getInt('id_user');
+  String? _token = _sharedPreferences.getString('login_token');
 
-  var response = await http.get(
-    Uri.parse(
-      'https://demo.spot4all.com//all-tasks-per-user/$_ID_User',
-    )
-  );
+  String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_ID_User';
+  final response = await http.get(Uri.parse(_url), headers: {
+    HttpHeaders.authorizationHeader: 'Bearer $_token'
+  });
 
-  Map<String, dynamic> responseData = jsonDecode(response.body);
+  final responseData = Album.fromJson(jsonDecode(response.body));
 
-  final _length = responseData.length;
+  print(responseData);
 
-  for (var counter = 0; counter < _length; counter++){
-    print(responseData[counter]['title']);
-  }
-
+  return responseData;
 }
+
+
+class Album {
+  final int userId;
+  final int id;
+  final String title;
+
+  const Album({
+    required this.userId,
+    required this.id,
+    required this.title,
+  });
+
+  factory Album.fromJson(Map<String, dynamic> json) {
+    return Album(
+      userId: json['userId'],
+      id: json['id'],
+      title: json['title'],
+    );
+  }
+}
+
 
