@@ -84,7 +84,13 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        getTarefas();
+                        try {
+                          getTarefas();
+                        } catch(_){
+                          print(
+                            'error'
+                          );
+                        }
                       },
                     child: Text(
                       'Teste'
@@ -99,43 +105,30 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
   }
 }
 
-Future<Album> getTarefas() async {
+Future getTarefas() async {
 
   SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
   int? _ID_User = _sharedPreferences.getInt('id_user');
   String? _token = _sharedPreferences.getString('login_token');
+  String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_ID_User/';
+  Map <String, String> _headers = {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Accept': 'application/json',
+  'Authorization': 'Bearer $_token'
+  };
 
-  String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_ID_User';
-  final response = await http.get(Uri.parse(_url), headers: {
-    HttpHeaders.authorizationHeader: 'Bearer $_token'
-  });
-
-  final responseData = Album.fromJson(jsonDecode(response.body));
-
-  print(responseData);
-
-  return responseData;
-}
-
-
-class Album {
-  final int userId;
-  final int id;
-  final String title;
-
-  const Album({
-    required this.userId,
-    required this.id,
-    required this.title,
-  });
-
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-    );
+  try {
+    final response = await http.get(Uri.parse(_url), headers: _headers);
+    print(response);
+    print(response.headers['content-type']);
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      return responseData;
+    } else {
+      throw Exception('Failed to fetch data: ${response.statusCode}');
+    }
+  } catch (e) {
+    throw Exception('Failed to fetch data: $e');
   }
 }
-
 
