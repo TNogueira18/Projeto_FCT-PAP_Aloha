@@ -110,11 +110,13 @@ Future getTarefas() async {
   SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
   int? _ID_User = _sharedPreferences.getInt('id_user');
   String? _token = _sharedPreferences.getString('login_token');
-  String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_ID_User/';
+  String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_ID_User';
+  print(_token);
   Map <String, String> _headers = {
     'Content-Type': 'application/json; charset=utf-8',
+    'Authorization':'Bearer $_token; Path=/;',
     'Accept': 'application/json',
-  'Authorization': 'Bearer $_token'
+    'Accept-Encoding': 'gzip, deflate, br',
   };
 
   try {

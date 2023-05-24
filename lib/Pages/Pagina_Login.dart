@@ -158,6 +158,7 @@ class _PaginaLoginState extends State<Pagina_Login> {
        Uri.parse('https://demo.spot4all.com/login'),
        headers: <String, String>{
          'Content-Type': 'application/json; charset=UTF-8',
+         'Connection': 'keep-alive',
        },
        body: jsonEncode(<String, String>{
          'email': _emailController.text,
@@ -168,7 +169,9 @@ class _PaginaLoginState extends State<Pagina_Login> {
     Map<String, dynamic> responseData = jsonDecode(response.body); //Retirar o texto da resposta da API para uma variavel
 
     if(responseData['token'] != null){
-      String? _token = responseData['token']; //Retirar o token para uma variavel para que possa ser utilizado no login
+
+      var _token = (responseData['token']).split(','); //Retirar o token para uma variavel para que possa ser utilizado no login
+      print(_token);
       _sharedPreferences.setString('login_token', _token!); //Colocar o token para que o utilizador não tenha que estar sempre a efetuar o login na app
 
       int? _user_ID = responseData['user']['user_id']; //Retirar o id do utilizador para uma variavel para que possa ser utilizado na dashboard
