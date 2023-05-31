@@ -152,7 +152,6 @@ class _PaginaLoginState extends State<Pagina_Login> {
   }
 
   EfetuarLogin() async {
-
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance(); //Ativar a library sharedPreferences
 
      var response = await http.post(
@@ -176,8 +175,8 @@ class _PaginaLoginState extends State<Pagina_Login> {
       int? _user_ID = responseData['user']['user_id']; //Retirar o id do utilizador para uma variavel para que possa ser utilizado na dashboard
       _sharedPreferences.setInt('id_user', _user_ID!); //Colocar o Id do utilizador para que este possa ser utilizado para  a dasboard
 
-      _sharedPreferences.setInt('login_token_expiration', DateTime.now().millisecondsSinceEpoch + (5 * 60 * 1000)); // Colocar o tempo que o token irá estar ativo por, o tempo pode ser alterado se modificar o primeiro valor pela quantidade de minutos desejado, de momento está preparado para durar 5 minutos
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const Pagina_Dashboard()));
+      _sharedPreferences.setInt('login_token_expiration', DateTime.now().millisecondsSinceEpoch + (30 * 60 * 1000)); // Colocar o tempo que o token irá estar ativo por, o tempo pode ser alterado se modificar o primeiro valor pela quantidade de minutos desejado, de momento está preparado para durar 5 minutos
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Pagina_Dashboard()));
     }else{
       showDialog(
         context: context,
@@ -198,4 +197,49 @@ class _PaginaLoginState extends State<Pagina_Login> {
       );
     }
   }
+/*
+  getTarefas() async {
+    List<Widget> _Lista_Widget_Tarefas = [];
+    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
+    int? _ID_User = _sharedPreferences.getInt('id_user');
+    String? _token = _sharedPreferences.getString('login_token');
+    String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_ID_User';
+    Map <String, String> _headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Authorization':'Bearer $_token',
+    };
+
+
+    try {
+      final response = await http.get(Uri.parse(_url), headers: _headers);
+      if (response.statusCode == 200) {
+        List<dynamic> _Lista_Mapas = jsonDecode(response.body);
+        for(int counter = 0; counter < _Lista_Mapas.length; counter++){
+          Map<String, dynamic> _Lista_Tarefas = _Lista_Mapas[counter];
+          _Lista_Tarefas.forEach((key, value) {
+            Widget containerWidget = Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Container(
+                height: 150,
+                color: Color(
+                    0xFF2c55ca
+                ),
+                child: Text(
+                  '$key: $value'
+                ),
+              ),
+            );
+            //_Lista_Widget_Tarefas.add(containerWidget);
+            setState(() {});
+          });
+        }
+      } else {
+        print('Failed to fetch data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Failed to fetch data: $e');
+    }
+    return _Lista_Widget_Tarefas;
+  }
+*/
 }

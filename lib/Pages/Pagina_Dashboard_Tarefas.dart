@@ -8,19 +8,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:main/Pages/Pagina_Login.dart';
 
 class Pagina_Dashboard extends StatefulWidget {
-  const Pagina_Dashboard({super.key});
+  const Pagina_Dashboard({Key? key}) : super(key: key);
 
   @override
   State<Pagina_Dashboard> createState() => _PaginaDasboardState();
 }
 
-
-
 class _PaginaDasboardState extends State<Pagina_Dashboard> {
-
   final _formkey = GlobalKey<FormState>();
-  List<Widget> _Lista_Tarefas = [];
-  ScrollController _scrollController = ScrollController();
+  //ScrollController _scrollController = ScrollController();
+  List<Widget> _Lista_Widget_Tarefas = [];
+
+  @override
+  initState() {
+    super.initState();
+    final _Prep_Lista = getTarefas();
+    print(_Prep_Lista);
+    //_Lista_Widget_Tarefas = _Prep_Lista;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,76 +33,71 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
       appBar: AppBar(
         title: Text(
           'Tarefas',
-          style: TextStyle(
-              color: Colors.white
-          ),
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-        backgroundColor: Color(
-            0xFF2c55ca
-        ),
+        backgroundColor: Color(0xFF2c55ca),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
             setState(() {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const Pagina_Login()));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Pagina_Login()));
             });
           },
         ),
       ),
-      body: ListView(
-        children: [
-          Container(
-            child: RawScrollbar(
-              thickness: 5,
-              thumbColor: Colors.indigo,
-              radius: Radius.circular(15),
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                  child: Column(
-                    children: _Lista_Tarefas,
-                  ),
-              ),
-            ),
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: _Lista_Widget_Tarefas.length,
+        itemBuilder: (context, index) {
+          return _Lista_Widget_Tarefas[index];
+        },
       ),
     );
   }
 
-  Widget containerWidget = Padding(
-      padding: EdgeInsets.all(
-        15
-      ),
-    child: Container(
-      height: 150,
-      color: Colors.blue,
-    ),
-  );
-
-  getTarefas() async {
-
+  getTarefas() async{
+    List<Widget> _Lista_Widget_Tarefas = [];
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
-    int? _ID_User = _sharedPreferences.getInt('id_user');
     String? _token = _sharedPreferences.getString('login_token');
-    String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_ID_User';
-    Map <String, String> _headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Authorization':'Bearer $_token',
-    };
-
+    int? _id = _sharedPreferences.getInt('id_user');
 
     try {
-      final response = await http.get(Uri.parse(_url), headers: _headers);
-      if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = jsonDecode(response.body);
-        print(responseData[0].title);
-      } else {
-        print('Failed to fetch data: ${response.statusCode}');
+      List<Widget> _Lista_Widget_Tarefas = [];
+      String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_id';
+      Map<String, String> _headers = {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': 'Bearer $_token',
+      };
+      try {
+        final response = await http.get(Uri.parse(_url), headers: _headers);
+        if (response.statusCode == 200) {
+          List<dynamic> _Lista_Mapas = jsonDecode(response.body);
+          for (int counter = 0; counter < _Lista_Mapas.length; counter++) {
+            Map<String, dynamic> _Lista_Tarefas = _Lista_Mapas[counter];
+            if (_Lista_Tarefas['status_tarefa'] == 1) {
+              Widget containerWidget = Padding(
+                padding: EdgeInsets.all(20),
+                child: Container(
+                  height: 200,
+                  color: Color(0xFF2c55ca),
+                  child: Text(''),
+                ),
+              );
+              _Lista_Widget_Tarefas.add(containerWidget);
+            }
+          };
+        } else {
+          print('Failed to fetch data: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Failed to fetch data: $e');
       }
+      return _Lista_Widget_Tarefas;
     } catch (e) {
-      print('Failed to fetch data: $e');
+      print('Failed to get data: $e');
     }
   }
-
 }
