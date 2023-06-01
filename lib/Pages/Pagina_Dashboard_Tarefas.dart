@@ -17,14 +17,19 @@ class Pagina_Dashboard extends StatefulWidget {
 class _PaginaDasboardState extends State<Pagina_Dashboard> {
   final _formkey = GlobalKey<FormState>();
   //ScrollController _scrollController = ScrollController();
-  List<Widget> _Lista_Widget_Tarefas = [];
+  List<Widget> _Lista_Widgets = [];
 
   @override
-  initState() {
+  void initState() {
     super.initState();
-    final _Prep_Lista = getTarefas();
-    print(_Prep_Lista);
-    //_Lista_Widget_Tarefas = _Prep_Lista;
+    _initializeListaWidgets();
+  }
+
+  Future<void> _initializeListaWidgets() async {
+    List<Widget> listaWidgets = await getTarefas();
+    setState(() {
+      _Lista_Widgets = listaWidgets;
+    });
   }
 
   @override
@@ -50,22 +55,21 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
         ),
       ),
       body: ListView.builder(
-        itemCount: _Lista_Widget_Tarefas.length,
+        itemCount: _Lista_Widgets.length,
         itemBuilder: (context, index) {
-          return _Lista_Widget_Tarefas[index];
+          return _Lista_Widgets[index];
         },
       ),
     );
   }
 
-  getTarefas() async{
+  Future<List<Widget>> getTarefas() async{
     List<Widget> _Lista_Widget_Tarefas = [];
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     String? _token = _sharedPreferences.getString('login_token');
     int? _id = _sharedPreferences.getInt('id_user');
 
     try {
-      List<Widget> _Lista_Widget_Tarefas = [];
       String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_id';
       Map<String, String> _headers = {
         'Content-Type': 'application/json; charset=utf-8',
@@ -98,6 +102,7 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
       return _Lista_Widget_Tarefas;
     } catch (e) {
       print('Failed to get data: $e');
+      return _Lista_Widget_Tarefas;
     }
   }
 }
