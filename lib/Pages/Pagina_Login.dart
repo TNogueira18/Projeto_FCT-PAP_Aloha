@@ -197,49 +197,4 @@ class _PaginaLoginState extends State<Pagina_Login> {
       );
     }
   }
-/*
-  getTarefas() async {
-    List<Widget> _Lista_Widget_Tarefas = [];
-    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
-    int? _ID_User = _sharedPreferences.getInt('id_user');
-    String? _token = _sharedPreferences.getString('login_token');
-    String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_ID_User';
-    Map <String, String> _headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Authorization':'Bearer $_token',
-    };
-
-
-    try {
-      final response = await http.get(Uri.parse(_url), headers: _headers);
-      if (response.statusCode == 200) {
-        List<dynamic> _Lista_Mapas = jsonDecode(response.body);
-        for(int counter = 0; counter < _Lista_Mapas.length; counter++){
-          Map<String, dynamic> _Lista_Tarefas = _Lista_Mapas[counter];
-          _Lista_Tarefas.forEach((key, value) {
-            Widget containerWidget = Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Container(
-                height: 150,
-                color: Color(
-                    0xFF2c55ca
-                ),
-                child: Text(
-                  '$key: $value'
-                ),
-              ),
-            );
-            //_Lista_Widget_Tarefas.add(containerWidget);
-            setState(() {});
-          });
-        }
-      } else {
-        print('Failed to fetch data: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Failed to fetch data: $e');
-    }
-    return _Lista_Widget_Tarefas;
-  }
-*/
 }

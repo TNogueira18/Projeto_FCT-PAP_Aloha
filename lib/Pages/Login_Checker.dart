@@ -16,8 +16,8 @@ class _Login_CkeckerState extends State<Login_Ckecker> {
   @override
   initState() {
     super.initState();
-    verificarUtilizador().then((temUtilizador) {
-      if (temUtilizador == true) {
+    verificarUtilizador().then((_temUtilizador) {
+      if (_temUtilizador == true) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const Pagina_Dashboard()));
       } else {
