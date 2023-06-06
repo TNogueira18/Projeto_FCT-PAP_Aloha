@@ -13,6 +13,8 @@ class Pagina_Dashboard extends StatefulWidget {
   State<Pagina_Dashboard> createState() => _PaginaDasboardState();
 }
 
+String _Path = 'Todas';
+
 class Constants {
   static const String FirstItem = 'Todas';
   static const String SecondItem = 'Dia';
@@ -32,17 +34,25 @@ class Constants {
 class _PaginaDasboardState extends State<Pagina_Dashboard> {
   //final _formkey = GlobalKey<FormState>();
   List<Widget> _Lista_Widgets = [];
+  List<Widget> _list_widgets = [];
 
   @override
   void initState() {
     super.initState();
-    _initializeListaWidgets();
+    todasTarefas();
   }
 
   Future<void> _initializeListaWidgets() async {
-    List<Widget> listaWidgets = await getTarefas();
+        List<Widget> listaWidgets = await getTarefas(_Path);
+        setState(() {
+          _Lista_Widgets = listaWidgets;
+    });
+  }
+
+  Future<void> _initializeListaWidgets_todas() async {
+    List<Widget> listaWidgets = await getTarefas(_Path);
     setState(() {
-      _Lista_Widgets = listaWidgets;
+      _list_widgets.addAll(listaWidgets);
     });
   }
 
@@ -80,15 +90,29 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
     );
   }
 
-  Future<List<Widget>> getTarefas() async {
+  //Modificar função para funcionar por as 3 tipos de tarefas, futuras, pendentes e diárias
+
+  Future<List<Widget>> getTarefas(String path) async {
     List<Widget> _Lista_Widget_Tarefas = [];
     SharedPreferences _sharedPreferences =
         await SharedPreferences.getInstance();
     String? _token = _sharedPreferences.getString('login_token');
     int? _id = _sharedPreferences.getInt('id_user');
 
+    var _BC = 5;
+
+    if (path == 'todas-tarefas-pendentes') {
+      _BC = 0xFFf2c4c4;
+    } else if (path == 'todas-tarefas-dia') {
+      _BC = 0xFFf5e8b3;
+    } else if (path == 'todas-tarefas-futuras') {
+      _BC = 0xFF9db5f6;
+    } else {
+      print('Error');
+    }
+
     try {
-      String _url = 'https://demo.spot4all.com/all-tasks-per-user/$_id';
+      String _url = 'https://demo.spot4all.com/$path/$_id';
       Map<String, String> _headers = {
         'Content-Type': 'application/json; charset=utf-8',
         'Authorization': 'Bearer $_token',
@@ -103,9 +127,9 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
               String _id_contactos = 'id:' +
                   _Lista_Tarefas['id'].toString() +
                   ' - ' +
-                  _Lista_Tarefas['contact_id'].toString() +
+                  _Lista_Tarefas['name'].toString() +
                   ' - (' +
-                  _Lista_Tarefas['sub_contact_id'].toString() +
+                  _Lista_Tarefas['nickname'].toString() +
                   ')';
               String _title_status = _Lista_Tarefas['title'] +
                   ' - ' +
@@ -115,15 +139,15 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
               String _dataend_assigned =
                   _Lista_Tarefas['data_evento_end'].toString() +
                       ' - ' +
-                      _Lista_Tarefas['assigned_to'].toString();
+                      _Lista_Tarefas['consultor'].toString();
               String _creator =
-                  'Criado por: ' + _Lista_Tarefas['created_by'].toString();
+                  'Criado por: ' + _Lista_Tarefas['criador'].toString();
               Widget containerWidget = Padding(
                 padding: EdgeInsets.all(20),
                 child: Container(
                     padding: EdgeInsets.all(20),
-                    height: 200,
-                    color: Color(0xFF2c55ca),
+                    height: 250,
+                    color: Color(_BC),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,11 +158,11 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                           children: [
                             Text(
                               _id_contactos,
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.black, fontSize: 15),
                             ),
                             Text(
                               _title_status,
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.black, fontSize: 15),
                             ),
                           ],
                         ),
@@ -148,25 +172,25 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                           children: [
                             Text(
                               _subject,
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.black, fontSize: 20),
                             ),
                             Text(
                               _description,
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.black, fontSize: 12),
                             ),
                           ],
                         ),
-                        Row(
+                        Column(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               _dataend_assigned,
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.black, fontSize: 15),
                             ),
                             Text(
                               _creator,
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.black, fontSize: 15),
                             ),
                           ],
                         ),
@@ -190,16 +214,43 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
     }
   }
 
+  Future<void> todasTarefas() async {
+    _list_widgets = [];
+    int counter = 0;
+    while (counter < 3) {
+      if (counter == 0) {
+        _Path = 'todas-tarefas-pendentes';
+      } else if (counter == 1) {
+        _Path = 'todas-tarefas-dia';
+      } else if (counter == 2) {
+        _Path = 'todas-tarefas-futuras';
+      } else {
+        break;
+      }
+      await _initializeListaWidgets_todas();
+      counter+=1;
+    }
+    _Lista_Widgets = _list_widgets;
+  }
+
   void choiceAction(String choice) {
     if (choice == Constants.FirstItem) {
-      print('I First Item');
+      //todas
+      todasTarefas();
     } else if (choice == Constants.SecondItem) {
-      print('I Second Item');
+      //dia
+      _Path = 'todas-tarefas-dia';
+      _initializeListaWidgets();
     } else if (choice == Constants.ThirdItem) {
-      print('I Third Item');
+      //pendentes
+      _Path = 'todas-tarefas-pendentes';
+      _initializeListaWidgets();
     } else if (choice == Constants.FourthItem) {
-      print('I Fourth Item');
+      //futuras
+      _Path = 'todas-tarefas-futuras';
+      _initializeListaWidgets();
     } else if (choice == Constants.FifthItem) {
+      //logout
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => const Pagina_Login()));
     }
