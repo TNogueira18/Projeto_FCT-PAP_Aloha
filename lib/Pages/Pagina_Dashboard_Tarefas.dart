@@ -120,7 +120,7 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
               String _subject = _Lista_Tarefas['subject'];
               String _description = _Lista_Tarefas['description'];
               String _dataend_assigned =
-                  _Lista_Tarefas['data_evento_end'].toString() +
+                  _Lista_Tarefas['data_evento_end'].toString().substring(0, 10) +
                       ' - ' +
                       _Lista_Tarefas['consultor'].toString();
               String _creator =
