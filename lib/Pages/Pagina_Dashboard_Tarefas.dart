@@ -108,7 +108,7 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
             Map<String, dynamic> _Lista_Tarefas = _Lista_Mapas[counter]; //Mapear cada item da list para que possa ser processado
             if (_Lista_Tarefas['status_tarefa'] == 1) { //Verificar se a Tarefas ainda está ativa
               String _id_contactos = 'id:' + //Criar o texto dos widgets dos cartões
-                  _Lista_Tarefas['id'].toString() +
+                  _Lista_Tarefas['tarefa_id'].toString() +
                   ' - ' +
                   _Lista_Tarefas['name'].toString() +
                   ' - (' +
@@ -116,7 +116,7 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                   ')';
               String _title_status = _Lista_Tarefas['title'] +
                   ' - ' +
-                  _Lista_Tarefas['status'].toString();
+                  _Lista_Tarefas['status_name'].toString();
               String _subject = _Lista_Tarefas['subject'];
               String _description = _Lista_Tarefas['description'];
               String _dataend_assigned =
@@ -135,9 +135,9 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                       mainAxisSize: MainAxisSize.max, //Definir o tamanho da coluna
                       mainAxisAlignment: MainAxisAlignment.spaceBetween, //Definir o espaço entre widgets
                       children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max, //Definir o tamanho da row
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween, //Definir o espaço entre widgets
+                        Column(
+                          mainAxisSize: MainAxisSize.max, //Definir o tamanho da coluna
+                          crossAxisAlignment: CrossAxisAlignment.stretch, //Colocar os widgets no principio do container
                           children: [
                             Text(
                               _id_contactos, //Colocar o texto nos widgets
@@ -150,7 +150,7 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                           ],
                         ),
                         Column(
-                          mainAxisSize: MainAxisSize.min, //Definir o tamanho da row
+                          mainAxisSize: MainAxisSize.min, //Definir o tamanho da coluna
                           crossAxisAlignment: CrossAxisAlignment.start, //Definir onde os widgets começão
                           children: [
                             Text(
@@ -164,8 +164,9 @@ class _PaginaDasboardState extends State<Pagina_Dashboard> {
                           ],
                         ),
                         Column(
-                          mainAxisSize: MainAxisSize.max, //Definir o tamanho da row
+                          mainAxisSize: MainAxisSize.max, //Definir o tamanho da coluna
                           mainAxisAlignment: MainAxisAlignment.spaceBetween, //Definir o espaço entre widgets
+                          crossAxisAlignment: CrossAxisAlignment.stretch, //Colocar os widgets no principio do container
                           children: [
                             Text(
                               _dataend_assigned, //Colocar o texto nos widgets
