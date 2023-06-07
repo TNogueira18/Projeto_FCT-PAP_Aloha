@@ -16,13 +16,13 @@ class _Login_CkeckerState extends State<Login_Ckecker> {
   @override
   initState() {
     super.initState();
-    verificarUtilizador().then((_temUtilizador) {
+    verificarUtilizador().then((_temUtilizador) { //Verificar se o existe um token ou se o mesmo ainda está válido
       if (_temUtilizador == true) {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const Pagina_Dashboard()));
+            MaterialPageRoute(builder: (context) => const Pagina_Dashboard())); //Enviar para a página da dashboard quando o mesmo existe e está válido
       } else {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const Pagina_Login()));
+            MaterialPageRoute(builder: (context) => const Pagina_Login())); //Enviar para o login quando não existe ou não está válido
       }
     });
   }
@@ -32,14 +32,14 @@ class _Login_CkeckerState extends State<Login_Ckecker> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
+          decoration: BoxDecoration( //Colocar o estilo
+              gradient: LinearGradient( //Definir o tipo de gradient
                   colors: [
-                    Colors.white,
-                    Colors.black,
+                    Colors.white, //Declaração da cor de ínicio do gradient
+                    Colors.black, //Declaração da cor final do gradient
                   ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight
+                  begin: Alignment.topLeft, //Onde o gradient começa
+                  end: Alignment.bottomRight //Onde o gradient acaba
               )
           ),
       ),
@@ -48,13 +48,13 @@ class _Login_CkeckerState extends State<Login_Ckecker> {
 
   //Função que verifica se o token ainda está valido
   Future<bool> verificarUtilizador() async {
-    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
-    String? token = _sharedPreferences.getString('login_token');
-    int? expirationTime = _sharedPreferences.getInt('login_token_expiration');
+    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance(); //Ativar a library sharedPreferences
+    String? token = _sharedPreferences.getString('login_token'); //Colocar o token, se existir, numa variavél
+    int? expirationTime = _sharedPreferences.getInt('login_token_expiration'); //Colocar o tempo de expiração numa variável, se existir
 
-    if (token != null && expirationTime != null && DateTime.now().millisecondsSinceEpoch < expirationTime) {
+    if (token != null && expirationTime != null && DateTime.now().millisecondsSinceEpoch < expirationTime) { //Verificação do tempo de expiração
       return true;
-    } else {
+    } else { //Returnar o resultado da verificação
       return false;
     }
   }
